@@ -85,6 +85,7 @@ textarea, #output {
   font-size: 14px;
 }
 
+
 .textarea-wrapper textarea {
   margin-left: 0px; /* Ajustar según sea necesario el ancho de los números de línea */
 }
@@ -134,6 +135,7 @@ button:disabled {
 
 ::-webkit-scrollbar {
   width: 8px;
+  height: 10px; /* Altura de la scrollbar horizontal */
 }
 
 ::-webkit-scrollbar-thumb {
@@ -143,4 +145,14 @@ button:disabled {
 
 ::-webkit-scrollbar-track {
   background-color: #021F34;
+}
+
+#output::-webkit-scrollbar-thumb {
+  background-color: #5A7D9A; /* Color de la barra que se arrastra */
+  border-radius: 10px; /* Esquinas redondeadas */
+}
+
+#output::-webkit-scrollbar-track {
+  background-color: #1A2E3B; /* Color de la pista (el fondo de la scrollbar) */
+  border-radius: 10px; /* Esquinas redondeadas */
 }

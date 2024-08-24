@@ -1,0 +1,146 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+
+body {
+  font-family: 'Roboto Mono', monospace;
+  margin: 20px;
+  background-color: #0A1E2D;
+}
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  background-color: #112B44;
+  padding: 20px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.horizontal-layout {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.input-section, .output-section {
+  width: 48%;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #B0C4DE;
+}
+
+.textarea-wrapper {
+  display: flex;
+  position: relative;
+  height: auto; /* Permitir que el contenedor crezca según el contenido */
+}
+
+.line-numbers {
+  padding: 10px;
+  background-color: #1A2E3B;
+  color: #8FAADC;
+  border-right: 1px solid #444;
+  user-select: none;
+  text-align: right;
+  min-height: 100%; /* Ajustar para que los números de línea crezcan con el contenido */
+  font-size: 14px;
+}
+
+.line-numbers span {
+  display: block;
+  padding: 0 0px;
+}
+
+textarea, #output {
+  width: 100%;
+  padding: 10px;
+  border-radius: 0 5px 5px 0;
+  border: 1px solid #444;
+  font-size: 16px;
+  background-color: #021F34;
+  color: #8FAADC;
+  overflow-x: auto;
+  white-space: pre;
+  resize: none;
+  box-sizing: border-box;
+  min-height: 450px;
+  overflow-y: hidden;
+}
+
+#output {
+  background-color: #1A2E3B;
+  color: #00FF00;
+  font-family: 'Roboto Mono', monospace;
+  white-space: pre;
+  box-sizing: border-box;
+  padding-left: 10px;
+  font-size: 14px;
+}
+
+.textarea-wrapper textarea {
+  margin-left: 0px; /* Ajustar según sea necesario el ancho de los números de línea */
+}
+
+.textarea-wrapper #output {
+  margin-left: 0px;
+}
+
+.button-group {
+  margin-top: 0px;
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+  border-radius: 10px;
+  position: fixed;   /* Fija la posición del botón en la pantalla */
+  top: 0;            /* Fija el botón a la parte superior de la ventana */
+  left: 0;           /* Fija el botón al borde izquierdo de la ventana */
+  background-color: #112B44; /* Fondo para que sea visible mientras se desplaza */
+  z-index: 100;      /* Asegura que esté por encima de otros elementos */
+  padding: 10px 0;   /* Espaciado adicional para mejor apariencia */
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1); /* Sombra para resaltar el botón */
+}
+
+button {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #ffffff;
+  background-color: #5A7D9A;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+#fileInput {
+  font-size: 16px;
+  color: #ffffff;
+  background-color: #5A7D9A;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #5A7D9A;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #021F34;
+}

@@ -51,6 +51,7 @@ label {
   text-align: right;
   min-height: 100%; /* Ajustar para que los números de línea crezcan con el contenido */
   font-size: 14px;
+  border-radius: 10px 0px 0px 10px;
 }
 
 .line-numbers span {

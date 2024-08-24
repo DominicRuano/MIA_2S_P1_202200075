@@ -9,10 +9,12 @@ const FrontendProyecto = () => {
 
     const handleExecute = () => {
         setOutput(`Procesando la entrada...`);
+        setOutputLines(1);
 
         // Simular un proceso de ejecución
         setTimeout(() => {
             setOutput(`${input}`);
+            setOutputLines(input.split('\n').length);
         }, 2000); // Simulación de 2 segundos
     };
 
@@ -32,14 +34,20 @@ const FrontendProyecto = () => {
     }, [input]);
 
     useEffect(() => {
-        setOutputLines(input.split('\n').length);
-    }, [input]);
+        setOutputLines(output.split('\n').length);
+    }, []);
 
     return (
         <div className="container">
             <h3></h3>
             <div className="button-group">
-                <button id="executeButton" onClick={handleExecute}>
+                <button id="executeButton" onClick={() => {
+                    handleExecute(); 
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'      // Desplazamiento suave hacia la parte superior
+                    });
+                }}>
                     Ejecutar
                 </button>
                 <input 

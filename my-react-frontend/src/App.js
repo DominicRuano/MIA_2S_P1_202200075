@@ -29,6 +29,27 @@ const FrontendProyecto = () => {
         }
     };
 
+    const handleSendText = async () => {
+        try {
+            const response = await fetch('http://localhost:8080/api/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ text: input })
+            });
+    
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+    
+            const data = await response.json();
+        } catch (error) {
+            console.error('Failed to fetch:', error);
+        }
+    };
+    
+
     useEffect(() => {
         setInputLines(input.split('\n').length);
     }, [input]);
@@ -47,6 +68,7 @@ const FrontendProyecto = () => {
                         top: 0,
                         behavior: 'smooth'      // Desplazamiento suave hacia la parte superior
                     });
+                    handleSendText();
                 }}>
                     Ejecutar
                 </button>

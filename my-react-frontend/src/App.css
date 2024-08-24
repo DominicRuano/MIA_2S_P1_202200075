@@ -42,6 +42,11 @@ label {
   height: auto; /* Permitir que el contenedor crezca según el contenido */
 }
 
+textarea .line-numbers {
+  font-size: 10px;
+}
+
+
 .line-numbers {
   padding: 10px;
   background-color: #1A2E3B;
@@ -64,7 +69,7 @@ textarea, #output {
   padding: 10px;
   border-radius: 0 5px 5px 0;
   border: 1px solid #444;
-  font-size: 16px;
+  font-size: 14px;
   background-color: #021F34;
   color: #8FAADC;
   overflow-x: auto;
@@ -73,6 +78,7 @@ textarea, #output {
   box-sizing: border-box;
   min-height: 450px;
   overflow-y: hidden;
+  line-height: 1.358;
 }
 
 #output {

@@ -3,7 +3,7 @@ import './App.css';
 
 const FrontendProyecto = () => {
     const [input, setInput] = useState('');
-    const [output, setOutput] = useState('# Consola de salida\n\nAquí se mostrará la salida del programa.');
+    const [output, setOutput] = useState('# sistema de archivos EXT2.\n\tDominic Juan Pablo Rueno Perez\n\t202200075');
     const [inputLines, setInputLines] = useState(1);
     const [outputLines, setOutputLines] = useState(1);
 

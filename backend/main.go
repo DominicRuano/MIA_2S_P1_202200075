@@ -15,7 +15,7 @@ func main() {
 
 	//	Configura CORS para permitir solicitudes desde el origen del frontend
 	config := cors.Config{
-		AllowOrigins:     []string{"http://localhost:3000"}, // Cambia esto si tu frontend está en otra dirección
+		AllowOrigins:     []string{"http://localhost:3000"},
 		AllowMethods:     []string{"POST", "GET", "OPTIONS"},
 		AllowHeaders:     []string{"Content-Type"},
 		AllowCredentials: true,
@@ -36,7 +36,7 @@ func main() {
 		inputText := requestBody.Text
 		fmt.Println("Texto recibido!", inputText)
 
-		// Procesamiento del texto (ejemplo: convertir a mayúsculas)
+		// Procesamiento
 		processedText := analyzer.ProcessText(inputText)
 
 		c.JSON(http.StatusOK, gin.H{

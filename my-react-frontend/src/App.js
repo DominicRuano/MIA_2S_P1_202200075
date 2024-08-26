@@ -56,7 +56,6 @@ const FrontendProyecto = () => {
 
     return (
         <div className="container">
-            <h3>Sistema de Archivos EXT2</h3>
             <div className="button-group">
                 <button 
                     id="executeButton" 

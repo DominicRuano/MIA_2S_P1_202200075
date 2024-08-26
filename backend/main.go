@@ -3,10 +3,11 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+
+	analyzer "Backend/Analyzer"
 )
 
 func main() {
@@ -36,7 +37,7 @@ func main() {
 		fmt.Println("Texto recibido!", inputText)
 
 		// Procesamiento del texto (ejemplo: convertir a mayúsculas)
-		processedText := processText(inputText)
+		processedText := analyzer.ProcessText(inputText)
 
 		c.JSON(http.StatusOK, gin.H{
 			"message": "Texto procesado con éxito",
@@ -45,11 +46,4 @@ func main() {
 	})
 
 	r.Run(":8080")
-}
-
-// Función de ejemplo para procesar el texto
-func processText(text string) string {
-	// Aquí puedes implementar la lógica que desees
-	processed := strings.ToUpper(text)
-	return processed
 }

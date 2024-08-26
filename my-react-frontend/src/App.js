@@ -5,17 +5,34 @@ const FrontendProyecto = () => {
     const [input, setInput] = useState('');
     const [output, setOutput] = useState('# sistema de archivos EXT2.\n\tDominic Juan Pablo Rueno Perez\n\t202200075');
     const [inputLines, setInputLines] = useState(1);
-    const [outputLines, setOutputLines] = useState(1);
+    const [outputLines, setOutputLines] = useState(3); // Inicialmente hay 3 líneas en el output por defecto
 
-    const handleExecute = () => {
-        setOutput(`Procesando la entrada...`);
+    const handleExecute = async () => {
+        // Mostrar mensaje de procesamiento
+        setOutput('Procesando la entrada...');
         setOutputLines(1);
 
-        // Simular un proceso de ejecución
-        setTimeout(() => {
-            setOutput(`${input}`);
-            setOutputLines(input.split('\n').length);
-        }, 2000); // Simulación de 2 segundos
+        try {
+            const response = await fetch('http://localhost:8080/api/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ text: input })
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error del servidor: ${response.status} ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            setOutput(data.text);
+            setOutputLines(data.text.split('\n').length);
+        } catch (error) {
+            console.error('Error al procesar la solicitud:', error);
+            setOutput(`Error al procesar la solicitud: ${error.message}`);
+            setOutputLines(1);
+        }
     };
 
     const handleFileUpload = (event) => {
@@ -29,49 +46,33 @@ const FrontendProyecto = () => {
         }
     };
 
-    const handleSendText = async () => {
-        try {
-            const response = await fetch('http://localhost:8080/api/submit', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ text: input })
-            });
-    
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-    
-            const data = await response.json();
-        } catch (error) {
-            console.error('Failed to fetch:', error);
-        }
-    };
-    
-
     useEffect(() => {
-        setInputLines(input.split('\n').length);
+        setInputLines(input.split('\n').length || 1);
     }, [input]);
 
     useEffect(() => {
-        setOutputLines(output.split('\n').length);
-    }, []);
+        setOutputLines(output.split('\n').length || 1);
+    }, [output]);
 
     return (
         <div className="container">
-            <h3></h3>
+            <h3>Sistema de Archivos EXT2</h3>
             <div className="button-group">
-                <button id="executeButton" onClick={() => {
-                    handleExecute(); 
-                    window.scrollTo({
-                        top: 0,
-                        behavior: 'smooth'      // Desplazamiento suave hacia la parte superior
-                    });
-                    handleSendText();
-                }}>
+                <button 
+                    id="executeButton" 
+                    onClick={() => {
+                        handleExecute(); 
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'smooth' // Desplazamiento suave hacia la parte superior
+                        });
+                    }}
+                >
                     Ejecutar
                 </button>
+                <label htmlFor="fileInput" className="custom-file-upload">
+                    Subir Archivo
+                </label>
                 <input 
                     type="file" 
                     id="fileInput" 
@@ -105,10 +106,9 @@ const FrontendProyecto = () => {
                             ))}
                         </div>
                         <textarea 
-                            disabled
                             id="output"
                             value={output}
-                            onChange={(e) => setInput(e.target.value)}
+                            readOnly
                             placeholder=""
                         ></textarea>
                     </div>

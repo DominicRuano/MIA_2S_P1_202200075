@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-contrib/cors"
@@ -13,7 +12,7 @@ import (
 func main() {
 	r := gin.Default()
 
-	//	Configura CORS para permitir solicitudes desde el origen del frontend
+	//	Configuracion de CORS para permitir solicitudes desde el origen del frontend
 	config := cors.Config{
 		AllowOrigins:     []string{"http://localhost:3000"},
 		AllowMethods:     []string{"POST", "GET", "OPTIONS"},
@@ -34,10 +33,9 @@ func main() {
 		}
 
 		inputText := requestBody.Text
-		fmt.Println("Texto recibido!", inputText)
 
-		// Procesamiento
-		processedText := analyzer.ProcessText(inputText)
+		// Analizador	de texto
+		processedText := analyzer.Analyzer(inputText)
 
 		c.JSON(http.StatusOK, gin.H{
 			"message": "Texto procesado con éxito",

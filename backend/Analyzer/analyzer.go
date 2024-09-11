@@ -10,6 +10,7 @@ func Analyzer(text string) string {
 	processed := ""
 
 	for _, linea := range Lineas {
+		linea = strings.TrimSpace(linea)
 		tokens := strings.Split(linea, " ")
 
 		// Verificar si la linea es una linea vacia

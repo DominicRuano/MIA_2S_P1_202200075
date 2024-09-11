@@ -8,7 +8,6 @@ import (
 	"math/rand"
 	"os"
 	"path/filepath"
-	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -19,12 +18,9 @@ func MkDisk(tokens []string) string {
 	var path, unit, fit string
 	var size, sizeBytes int
 
-	// Unir tokens en una sola cadena y luego dividir por espacios, respetando las comillas
-	args := strings.Join(tokens, " ")
-	// Expresión regular para encontrar los parámetros del comando mkdisk
-	re := regexp.MustCompile(`(?i)-size=\d+|-unit=[kKmM]|-fit=[bBfFwW]{2}|-path="[^"]+"|-path=[^\s]+`)
-	// Encuentra todas las coincidencias de la expresión regular en la cadena de argumentos
-	tokens = re.FindAllString(args, -1)
+	Regex := `(?i)-size=\d+|-unit=[kKmM]|-fit=[bBfFwW]{2}|-path="[^"]+"|-path=[^\s]+`
+
+	tokens = utils.ParseParametros(tokens, Regex)
 
 	if len(tokens) > 4 || len(tokens) < 2 { // Si no hay cuatro parametros, no hace nada
 		return "Error: Comando mkdisk requiere minimo 2 parametros (path, size)  y maximo 4 (path, size, fit, unit).\n"
@@ -57,7 +53,6 @@ func MkDisk(tokens []string) string {
 			}
 		case "-path":
 			path = strings.ReplaceAll(partes[1], "\"", "")
-			fmt.Println(path)
 		default:
 			return fmt.Sprintf("Error: Parametro [" + partes[0] + "] no reconocido.\n")
 		}

@@ -29,8 +29,6 @@ func Analyzer(text string) string {
 		// Verificar si la linea es un comando
 
 		switch tokens[0] {
-		case "#": // Comentario
-			processed += strings.Join(tokens[1:], " ") + "\n"
 		case "MKDISK": // Comando MKDISK
 			processed += Commands.MkDisk(tokens)
 		case "RMDISK": // Comando RMDISK

@@ -27,12 +27,11 @@ func Analyzer(text string) string {
 		}
 
 		// Verificar si la linea es un comando
-
 		switch tokens[0] {
-		case "MKDISK": // Comando MKDISK
-			processed += Commands.MkDisk(tokens)
-		case "RMDISK": // Comando RMDISK
-			processed += Commands.RMDisk(tokens)
+		case "mkdisk": // Comando MKDISK
+			processed += Commands.MkDisk(tokens[1:])
+		case "rmdisk": // Comando RMDISK
+			processed += Commands.RMDisk(tokens[1:])
 		default: // Comando no reconocido
 			processed += "Comando [" + tokens[0] + "] no reconocido\n"
 		}

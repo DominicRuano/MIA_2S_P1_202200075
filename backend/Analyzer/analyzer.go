@@ -1,6 +1,7 @@
 package analyzer
 
 import (
+	Commands "Backend/Commands"
 	"strings"
 )
 
@@ -28,11 +29,13 @@ func Analyzer(text string) string {
 		// Verificar si la linea es un comando
 
 		switch tokens[0] {
-		case "#":
+		case "#": // Comentario
 			processed += strings.Join(tokens[1:], " ") + "\n"
-		case "MKDISK":
-			processed += "Se detecto MKDISK\n"
-		default:
+		case "MKDISK": // Comando MKDISK
+			processed += Commands.MkDisk(tokens)
+		case "RMDISK": // Comando RMDISK
+			processed += Commands.RMDisk(tokens)
+		default: // Comando no reconocido
 			processed += "Comando [" + tokens[0] + "] no reconocido\n"
 		}
 	}

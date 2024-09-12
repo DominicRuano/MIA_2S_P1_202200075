@@ -69,7 +69,7 @@ func MkDisk(tokens []string) string {
 	}
 
 	if fit == "" {
-		fit = "FF"
+		fit = "F"
 	}
 
 	if unit == "" {
@@ -86,9 +86,17 @@ func MkDisk(tokens []string) string {
 	var disco structs.MBR
 
 	// Inicializar el MBR
-	disco.Mbr_size = int32(sizeBytes)
-	disco.Mbr_date = float64(time.Now().Unix())
-	disco.Mbr_signature = int32(rand.Intn(1000))
+	disco.Mbr_size = int32(sizeBytes)           // Tamaño del disco en bytes
+	disco.Mbr_date = float64(time.Now().Unix()) // Obtiene la fecha actual en formato Unix
+	disco.Mbr_signature = rand.Int31()          // Genera un número aleatorio de tipo int32
+
+	disco.Mbr_fit = fit[0]
+	disco.Mbr_partitions = [4]structs.Partition{
+		{Part_status: 'N', Part_type: 'N', Part_fit: 'N', Part_start: -1, Part_size: -1, Part_name: [16]byte{'N'}, Part_correlative: 1, Part_id: -1},
+		{Part_status: 'N', Part_type: 'N', Part_fit: 'N', Part_start: -1, Part_size: -1, Part_name: [16]byte{'N'}, Part_correlative: 2, Part_id: -1},
+		{Part_status: 'N', Part_type: 'N', Part_fit: 'N', Part_start: -1, Part_size: -1, Part_name: [16]byte{'N'}, Part_correlative: 3, Part_id: -1},
+		{Part_status: 'N', Part_type: 'N', Part_fit: 'N', Part_start: -1, Part_size: -1, Part_name: [16]byte{'N'}, Part_correlative: 4, Part_id: -1},
+	}
 
 	// Extraer el directorio de la ruta del archivo
 	dir := filepath.Dir(path)

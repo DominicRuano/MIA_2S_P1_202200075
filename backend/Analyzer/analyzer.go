@@ -32,6 +32,8 @@ func Analyzer(text string) string {
 			processed += Commands.MkDisk(tokens[1:])
 		case "rmdisk": // Comando RMDISK
 			processed += Commands.RMDisk(tokens[1:])
+		case "rep": // Comando REP
+			processed += Commands.Rep(tokens[1:])
 		default: // Comando no reconocido
 			processed += "Comando [" + tokens[0] + "] no reconocido\n"
 		}

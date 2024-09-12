@@ -27,3 +27,5 @@ go.work.sum
 # Dominic
 tmp/*
 *.mia
+*.dot
+*.png

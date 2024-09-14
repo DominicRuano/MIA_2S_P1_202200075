@@ -11,9 +11,9 @@ type MBR struct {
 	Mbr_size       int32        // 4 bytes
 	Mbr_date       float64      // 8 bytes
 	Mbr_signature  int32        // 4 bytes
-	Mbr_fit        [1]byte      // 1 byte
+	Mbr_fit        [2]byte      // 2 byte
 	Mbr_partitions [4]Partition // 4 * (35) = 140 bytes
-	// Total = 157 bytes
+	// Total = 158 bytes
 }
 
 // DeserializeMBR lee la estructura MBR desde el inicio de un archivo binario

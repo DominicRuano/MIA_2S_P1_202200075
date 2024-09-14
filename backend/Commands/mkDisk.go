@@ -67,7 +67,7 @@ func MkDisk(tokens []string) string {
 	}
 
 	if fit == "" {
-		fit = "F"
+		fit = "FF"
 	}
 
 	if unit == "" {
@@ -88,7 +88,7 @@ func MkDisk(tokens []string) string {
 	disco.Mbr_date = float64(time.Now().Unix()) // Obtiene la fecha actual en formato Unix
 	disco.Mbr_signature = rand.Int31()          // Genera un número aleatorio de tipo int32
 
-	disco.Mbr_fit = [1]byte{0} // Tipo de ajuste
+	disco.Mbr_fit = [2]byte{fit[0], fit[1]} // Tipo de ajuste
 	disco.Mbr_partitions = [4]structs.Partition{
 		{Part_status: [1]byte{'N'}, Part_type: [1]byte{'N'}, Part_fit: [1]byte{'N'}, Part_start: -1, Part_size: -1, Part_name: [16]byte{'N'}, Part_correlative: 0, Part_id: -1},
 		{Part_status: [1]byte{'N'}, Part_type: [1]byte{'N'}, Part_fit: [1]byte{'N'}, Part_start: -1, Part_size: -1, Part_name: [16]byte{'N'}, Part_correlative: 0, Part_id: -1},

@@ -86,6 +86,8 @@ func GenerateDotFile(mbr structs.MBR, filePath string) error {
 	}
 	defer file.Close()
 
+	fitString := ByteToString(mbr.Mbr_fit[:])
+
 	// Escribir el contenido del archivo DOT
 	_, err = file.WriteString(`
 digraph G {
@@ -97,7 +99,7 @@ digraph G {
             <tr><td>mbr_tamano</td><td>` + fmt.Sprint(mbr.Mbr_size) + `</td></tr>
             <tr><td>mbr_fecha_creacion</td><td>` + time.Unix(int64(mbr.Mbr_date), 0).Format("2006-01-02 15:04") + `</td></tr>
             <tr><td>mbr_disk_signature</td><td>` + fmt.Sprint(mbr.Mbr_signature) + `</td></tr>
-            <tr><td>mbr_disk_fit</td><td>` + fmt.Sprint(mbr.Mbr_fit[0]) + `</td></tr>
+            <tr><td>mbr_disk_fit</td><td>` + fitString + `</td></tr>
     `)
 
 	if err != nil {
@@ -106,12 +108,12 @@ digraph G {
 
 	// Escribir las particiones en el archivo DOT
 	for i, partition := range mbr.Mbr_partitions {
-		partName := ConvertirNombre(partition.Part_name)
+		partName := ByteToString(partition.Part_name[:])
 		_, err := file.WriteString(`
             <tr><td colspan="2" bgcolor="purple"><font color="white">Particion ` + fmt.Sprint(i+1) + `</font></td></tr>
 			<tr><td>part_status</td><td>` + fmt.Sprint(partition.Part_status[0]) + `</td></tr>
             <tr><td>part_type</td><td>` + fmt.Sprint(partition.Part_type[0]) + `</td></tr>
-            <tr><td>part_fit</td><td>` + fmt.Sprint(partition.Part_fit[0]) + `</td></tr>
+            <tr><td>part_fit</td><td>` + string(partition.Part_fit[0]) + `</td></tr>
             <tr><td>part_start</td><td>` + fmt.Sprint(partition.Part_start) + `</td></tr>
             <tr><td>part_size</td><td>` + fmt.Sprint(partition.Part_size) + `</td></tr>
             <tr><td>part_name</td><td>` + partName + `</td></tr>
@@ -150,7 +152,7 @@ func ExecuteDot(dotFile, outputImage string) error {
 }
 
 // Convertir Part_name a string ignorando los caracteres nulos (0)
-func ConvertirNombre(partName [16]byte) string {
+func ByteToString(partName []byte) string {
 	var name []byte
 	for _, b := range partName {
 		if b == 0 {

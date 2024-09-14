@@ -3,7 +3,6 @@ package commands
 import (
 	structs "Backend/Structs"
 	utils "Backend/Utils"
-	"encoding/binary"
 	"fmt"
 	"os"
 	"os/exec"
@@ -43,29 +42,37 @@ func Rep(tokens []string) string {
 		}
 	}
 
-	// Abre el archivo
-	file, err := os.Open(path)
-	if err != nil {
-		return fmt.Sprintf("Error: No se pudo abrir el archivo: %s\n", err)
+	if name == "" {
+		return "Error: Faltan el parametro nombre.\n"
 	}
-	defer file.Close()
+
+	if path == "" {
+		return "Error: Faltan el path.\n"
+	}
 
 	// Crea una variable para almacenar los datos leídos
 	var mbr structs.MBR
 
-	// Leer los datos binarios en la estructura MBR
-	err = binary.Read(file, binary.LittleEndian, &mbr)
-	if err != nil {
-		return fmt.Sprintf("Error: No se pudo leer el struct: %s\n", err)
-	}
+	// Obtiene el mbr del archivo
+	mbr.DeserializeMBR(path)
+
+	// Path final del archivo sin la extensión
+	finalPath := "../Reportes/" + name + "_reporte"
 
 	// Generar el archivo DOT
-	err = GenerateDotFile(mbr, name+"_report.dot")
+	err := GenerateDotFile(mbr, finalPath+".dot")
 	if err != nil {
 		return fmt.Sprintln("Error:", err)
 	}
 
-	_ = ExecuteDot(name+"_report.dot", name+"_report.png")
+	// Ejecutar el comando DOT
+	err = ExecuteDot(finalPath+".dot", finalPath+".png")
+	if err != nil {
+		return fmt.Sprintln("Error:", err)
+	}
+
+	// Intentar eliminar el archivo
+	//os.Remove(finalPath + ".dot")
 
 	return "Comando REP ejecutado correctamente.\n"
 }
@@ -90,7 +97,7 @@ digraph G {
             <tr><td>mbr_tamano</td><td>` + fmt.Sprint(mbr.Mbr_size) + `</td></tr>
             <tr><td>mbr_fecha_creacion</td><td>` + time.Unix(int64(mbr.Mbr_date), 0).Format("2006-01-02 15:04") + `</td></tr>
             <tr><td>mbr_disk_signature</td><td>` + fmt.Sprint(mbr.Mbr_signature) + `</td></tr>
-            <tr><td>mbr_disk_fit</td><td>` + string(mbr.Mbr_fit) + `</td></tr>
+            <tr><td>mbr_disk_fit</td><td>` + fmt.Sprint(mbr.Mbr_fit[0]) + `</td></tr>
     `)
 
 	if err != nil {
@@ -101,10 +108,10 @@ digraph G {
 	for i, partition := range mbr.Mbr_partitions {
 		partName := ConvertirNombre(partition.Part_name)
 		_, err := file.WriteString(`
-            <tr><td colspan="2" bgcolor="purple"><font color="white">Partition ` + fmt.Sprint(i+1) + `</font></td></tr>
-            <tr><td>part_status</td><td>` + string(partition.Part_status) + `</td></tr>
-            <tr><td>part_type</td><td>` + string(partition.Part_type) + `</td></tr>
-            <tr><td>part_fit</td><td>` + string(partition.Part_fit) + `</td></tr>
+            <tr><td colspan="2" bgcolor="purple"><font color="white">Particion ` + fmt.Sprint(i+1) + `</font></td></tr>
+			<tr><td>part_status</td><td>` + fmt.Sprint(partition.Part_status[0]) + `</td></tr>
+            <tr><td>part_type</td><td>` + fmt.Sprint(partition.Part_type[0]) + `</td></tr>
+            <tr><td>part_fit</td><td>` + fmt.Sprint(partition.Part_fit[0]) + `</td></tr>
             <tr><td>part_start</td><td>` + fmt.Sprint(partition.Part_start) + `</td></tr>
             <tr><td>part_size</td><td>` + fmt.Sprint(partition.Part_size) + `</td></tr>
             <tr><td>part_name</td><td>` + partName + `</td></tr>

@@ -3,7 +3,6 @@ package commands
 import (
 	structs "Backend/Structs"
 	utils "Backend/Utils"
-	"encoding/binary"
 	"fmt"
 	"math/rand"
 	"os"
@@ -11,7 +10,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"unsafe"
 )
 
 func MkDisk(tokens []string) string {
@@ -90,12 +88,12 @@ func MkDisk(tokens []string) string {
 	disco.Mbr_date = float64(time.Now().Unix()) // Obtiene la fecha actual en formato Unix
 	disco.Mbr_signature = rand.Int31()          // Genera un número aleatorio de tipo int32
 
-	disco.Mbr_fit = fit[0]
+	disco.Mbr_fit = [1]byte{0} // Tipo de ajuste
 	disco.Mbr_partitions = [4]structs.Partition{
-		{Part_status: 'N', Part_type: 'N', Part_fit: 'N', Part_start: -1, Part_size: -1, Part_name: [16]byte{'N'}, Part_correlative: 1, Part_id: -1},
-		{Part_status: 'N', Part_type: 'N', Part_fit: 'N', Part_start: -1, Part_size: -1, Part_name: [16]byte{'N'}, Part_correlative: 2, Part_id: -1},
-		{Part_status: 'N', Part_type: 'N', Part_fit: 'N', Part_start: -1, Part_size: -1, Part_name: [16]byte{'N'}, Part_correlative: 3, Part_id: -1},
-		{Part_status: 'N', Part_type: 'N', Part_fit: 'N', Part_start: -1, Part_size: -1, Part_name: [16]byte{'N'}, Part_correlative: 4, Part_id: -1},
+		{Part_status: [1]byte{'N'}, Part_type: [1]byte{'N'}, Part_fit: [1]byte{'N'}, Part_start: -1, Part_size: -1, Part_name: [16]byte{'N'}, Part_correlative: 0, Part_id: -1},
+		{Part_status: [1]byte{'N'}, Part_type: [1]byte{'N'}, Part_fit: [1]byte{'N'}, Part_start: -1, Part_size: -1, Part_name: [16]byte{'N'}, Part_correlative: 0, Part_id: -1},
+		{Part_status: [1]byte{'N'}, Part_type: [1]byte{'N'}, Part_fit: [1]byte{'N'}, Part_start: -1, Part_size: -1, Part_name: [16]byte{'N'}, Part_correlative: 0, Part_id: -1},
+		{Part_status: [1]byte{'N'}, Part_type: [1]byte{'N'}, Part_fit: [1]byte{'N'}, Part_start: -1, Part_size: -1, Part_name: [16]byte{'N'}, Part_correlative: 0, Part_id: -1},
 	}
 
 	// Extraer el directorio de la ruta del archivo
@@ -114,21 +112,13 @@ func MkDisk(tokens []string) string {
 	}
 	defer file.Close()
 
-	// Escribir el MBR en el archivo
-	err = binary.Write(file, binary.LittleEndian, &disco)
-	if err != nil {
-		return fmt.Sprintf("Error al escribir el MBR en el archivo: %v\n", err)
-	}
-
-	// Calcular cuántos bytes ocupa el MBR
-	sizeOfMBR := int(unsafe.Sizeof(disco))
-
 	// Escribir ceros en el archivo para alcanzar el tamaño deseado
-	// Aquí restamos el tamaño del MBR del total para llenar el espacio restante
-	_, err = file.Write(make([]byte, sizeBytes-sizeOfMBR))
+	_, err = file.Write(make([]byte, sizeBytes))
 	if err != nil {
 		return fmt.Sprintf("Error al completar el archivo con ceros: %v\n", err)
 	}
+
+	disco.SerializeMBR(path)
 
 	return "Disco creado con exito.\n"
 }

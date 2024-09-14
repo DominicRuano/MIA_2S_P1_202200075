@@ -55,13 +55,10 @@ func (mbr *MBR) Print() {
 	// Convertir Mbr_creation_date a time.Time
 	creationTime := time.Unix(int64(mbr.Mbr_date), 0)
 
-	// Convertir Mbr_disk_fit a char
-	diskFit := rune(mbr.Mbr_fit[0])
-
 	fmt.Printf("MBR Size: %d\n", mbr.Mbr_size)
 	fmt.Printf("Creation Date: %s\n", creationTime.Format(time.RFC3339))
 	fmt.Printf("Disk Signature: %d\n", mbr.Mbr_signature)
-	fmt.Printf("Disk Fit: %c\n", diskFit)
+	fmt.Printf("Disk Fit: %c%c\n", mbr.Mbr_fit[0], mbr.Mbr_fit[0])
 }
 
 func (mbr *MBR) PrintPartitions() {

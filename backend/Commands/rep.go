@@ -112,6 +112,8 @@ digraph G {
 			// Convertir Part_name a string ignorando los caracteres nulos (0)
 			partName := ByteToString(partition.Part_name[:])
 
+			partID := ByteToString(partition.Part_id[:])
+
 			// Escribir la partición en el archivo DOT
 			_, err := file.WriteString(`
             <tr><td colspan="2" bgcolor="purple"><font color="white">Particion</font></td></tr>
@@ -122,7 +124,7 @@ digraph G {
             <tr><td>part_size</td><td>` + fmt.Sprint(partition.Part_size) + `</td></tr>
             <tr><td>part_name</td><td>` + partName + `</td></tr>
             <tr><td>part_correlative</td><td>` + fmt.Sprint(partition.Part_correlative) + `</td></tr>
-            <tr><td>part_id</td><td>` + fmt.Sprint(partition.Part_id) + `</td></tr>`)
+            <tr><td>part_id</td><td>` + partID + `</td></tr>`)
 
 			if err != nil {
 				return fmt.Errorf("error al escribir particion primaria en el archivo DOT: %v", err)
@@ -139,6 +141,8 @@ digraph G {
 				// Convertir Part_name a string ignorando los caracteres nulos (0)
 				EbrPartName := ByteToString(ebr.Ebr_name[:])
 
+				partID := ByteToString(partition.Part_id[:])
+
 				// Escribir la partición en el archivo DOT
 				_, err = file.WriteString(`
             <tr><td colspan="2" bgcolor="pink"><font color="white">Particion Logica</font></td></tr>
@@ -149,7 +153,7 @@ digraph G {
             <tr><td>part_size</td><td>` + fmt.Sprint(ebr.Ebr_size) + `</td></tr>
             <tr><td>part_name</td><td>` + EbrPartName + `</td></tr>
             <tr><td>part_correlative</td><td>` + fmt.Sprint(partition.Part_correlative) + `</td></tr>
-            <tr><td>part_id</td><td>` + fmt.Sprint(partition.Part_id) + `</td></tr>`)
+            <tr><td>part_id</td><td>` + partID + `</td></tr>`)
 
 				if err != nil {
 					return fmt.Errorf("error al escribir particion logica en el archivo DOT: %v", err)
@@ -164,6 +168,8 @@ digraph G {
 			// Convertir Part_name a string ignorando los caracteres nulos (0)
 			partName := ByteToString(partition.Part_name[:])
 
+			partID := ByteToString(partition.Part_id[:])
+
 			// Escribir la partición en el archivo DOT
 			_, err := file.WriteString(`
             <tr><td colspan="2" bgcolor="purple"><font color="white">Particion</font></td></tr>
@@ -174,7 +180,7 @@ digraph G {
             <tr><td>part_size</td><td>` + fmt.Sprint(partition.Part_size) + `</td></tr>
             <tr><td>part_name</td><td>` + partName + `</td></tr>
             <tr><td>part_correlative</td><td>` + fmt.Sprint(partition.Part_correlative) + `</td></tr>
-            <tr><td>part_id</td><td>` + fmt.Sprint(partition.Part_id) + `</td></tr>`)
+            <tr><td>part_id</td><td>` + partID + `</td></tr>`)
 
 			if err != nil {
 				return fmt.Errorf("error al escribir particion primaria en el archivo DOT: %v", err)

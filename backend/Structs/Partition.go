@@ -8,6 +8,6 @@ type Partition struct {
 	Part_size        int32    // 4 bytes
 	Part_name        [16]byte // 16 bytes
 	Part_correlative int32    // 4 bytes
-	Part_id          int32    // 4 bytes
-	// Total = 35 bytes
+	Part_id          [4]byte  // 4 bytes
+	// Total = 35 bytess
 }

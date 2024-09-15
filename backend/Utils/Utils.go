@@ -6,7 +6,9 @@ import (
 )
 
 func CalcularTamaño(size int, unit string) int {
-	if unit == "K" {
+	if unit == "B" {
+		return size
+	} else if unit == "K" {
 		return size * 1024
 	} else if unit == "M" {
 		return size * 1024 * 1024

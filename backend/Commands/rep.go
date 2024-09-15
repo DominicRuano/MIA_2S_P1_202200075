@@ -60,7 +60,7 @@ func Rep(tokens []string) string {
 	finalPath := "../Reportes/" + name + "_reporte"
 
 	// Generar el archivo DOT
-	err := GenerateDotFile(mbr, finalPath+".dot")
+	err := GenerateDotFile(mbr, finalPath+".dot", path)
 	if err != nil {
 		return fmt.Sprintln("Error:", err)
 	}
@@ -78,7 +78,7 @@ func Rep(tokens []string) string {
 }
 
 // Función para generar el archivo DOT con la estructura del MBR
-func GenerateDotFile(mbr structs.MBR, filePath string) error {
+func GenerateDotFile(mbr structs.MBR, filePath string, discPath string) error {
 	// Crear el archivo .dot
 	file, err := os.Create(filePath)
 	if err != nil {
@@ -107,22 +107,78 @@ digraph G {
 	}
 
 	// Escribir las particiones en el archivo DOT
-	for i, partition := range mbr.Mbr_partitions {
-		partName := ByteToString(partition.Part_name[:])
-		_, err := file.WriteString(`
-            <tr><td colspan="2" bgcolor="purple"><font color="white">Particion ` + fmt.Sprint(i+1) + `</font></td></tr>
+	for _, partition := range mbr.Mbr_partitions {
+		if partition.Part_type[0] == 'E' {
+			// Convertir Part_name a string ignorando los caracteres nulos (0)
+			partName := ByteToString(partition.Part_name[:])
+
+			// Escribir la partición en el archivo DOT
+			_, err := file.WriteString(`
+            <tr><td colspan="2" bgcolor="purple"><font color="white">Particion</font></td></tr>
 			<tr><td>part_status</td><td>` + fmt.Sprint(partition.Part_status[0]) + `</td></tr>
-            <tr><td>part_type</td><td>` + fmt.Sprint(partition.Part_type[0]) + `</td></tr>
-            <tr><td>part_fit</td><td>` + string(partition.Part_fit[0]) + `</td></tr>
+            <tr><td>part_type</td><td>` + string(partition.Part_type[0]) + `</td></tr>
+            <tr><td>part_fit</td><td>` + string(partition.Part_fit[:]) + `</td></tr>
             <tr><td>part_start</td><td>` + fmt.Sprint(partition.Part_start) + `</td></tr>
             <tr><td>part_size</td><td>` + fmt.Sprint(partition.Part_size) + `</td></tr>
             <tr><td>part_name</td><td>` + partName + `</td></tr>
             <tr><td>part_correlative</td><td>` + fmt.Sprint(partition.Part_correlative) + `</td></tr>
-            <tr><td>part_id</td><td>` + fmt.Sprint(partition.Part_id) + `</td></tr>
-        `)
+            <tr><td>part_id</td><td>` + fmt.Sprint(partition.Part_id) + `</td></tr>`)
 
-		if err != nil {
-			return fmt.Errorf("error al escribir las particiones en el archivo DOT: %v", err)
+			if err != nil {
+				return fmt.Errorf("error al escribir particion primaria en el archivo DOT: %v", err)
+			}
+
+			// Crear una variable para almacenar los datos leídos
+			var ebr structs.EBR
+
+			// Obtiene el ebr del archivo
+			ebr.DeserializeEBR(discPath, int64(partition.Part_start))
+
+			// Escribir las particiones logicas en el archivo DOT
+			for ebr.Ebr_next != -1 {
+				// Convertir Part_name a string ignorando los caracteres nulos (0)
+				EbrPartName := ByteToString(ebr.Ebr_name[:])
+
+				// Escribir la partición en el archivo DOT
+				_, err = file.WriteString(`
+            <tr><td colspan="2" bgcolor="pink"><font color="white">Particion Logica</font></td></tr>
+			<tr><td>part_status</td><td>` + fmt.Sprint(ebr.Ebr_mount[0]) + `</td></tr>
+            <tr><td>part_next</td><td>` + fmt.Sprint(ebr.Ebr_next) + `</td></tr>
+            <tr><td>part_fit</td><td>` + string(ebr.Ebr_fit[:]) + `</td></tr>
+            <tr><td>part_start</td><td>` + fmt.Sprint(ebr.Ebr_start) + `</td></tr>
+            <tr><td>part_size</td><td>` + fmt.Sprint(ebr.Ebr_size) + `</td></tr>
+            <tr><td>part_name</td><td>` + EbrPartName + `</td></tr>
+            <tr><td>part_correlative</td><td>` + fmt.Sprint(partition.Part_correlative) + `</td></tr>
+            <tr><td>part_id</td><td>` + fmt.Sprint(partition.Part_id) + `</td></tr>`)
+
+				if err != nil {
+					return fmt.Errorf("error al escribir particion logica en el archivo DOT: %v", err)
+				}
+
+				// Obtiene el proximo ebr del archivo
+				ebr.DeserializeEBR(discPath, int64(ebr.Ebr_next))
+			}
+
+		} else if partition.Part_type[0] != 'E' {
+
+			// Convertir Part_name a string ignorando los caracteres nulos (0)
+			partName := ByteToString(partition.Part_name[:])
+
+			// Escribir la partición en el archivo DOT
+			_, err := file.WriteString(`
+            <tr><td colspan="2" bgcolor="purple"><font color="white">Particion</font></td></tr>
+			<tr><td>part_status</td><td>` + fmt.Sprint(partition.Part_status[0]) + `</td></tr>
+            <tr><td>part_type</td><td>` + string(partition.Part_type[0]) + `</td></tr>
+            <tr><td>part_fit</td><td>` + string(partition.Part_fit[:]) + `</td></tr>
+            <tr><td>part_start</td><td>` + fmt.Sprint(partition.Part_start) + `</td></tr>
+            <tr><td>part_size</td><td>` + fmt.Sprint(partition.Part_size) + `</td></tr>
+            <tr><td>part_name</td><td>` + partName + `</td></tr>
+            <tr><td>part_correlative</td><td>` + fmt.Sprint(partition.Part_correlative) + `</td></tr>
+            <tr><td>part_id</td><td>` + fmt.Sprint(partition.Part_id) + `</td></tr>`)
+
+			if err != nil {
+				return fmt.Errorf("error al escribir particion primaria en el archivo DOT: %v", err)
+			}
 		}
 	}
 

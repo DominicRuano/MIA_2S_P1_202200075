@@ -21,3 +21,29 @@ rep -name=mbr -path=/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Pruebas/
 fdisk -type=P -unit=K -fit=BF -name=Particion1 -size=100 -path=/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Pruebas/Disco1.mia   
 
 
+
+#
+#
+#
+
+mkdisk    -size=1000   -unit=K -path=/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Pruebas/Disco1.mia
+
+
+fdisk -type=P -unit=K -fit=BF -name=Particion1 -size=100 -path=/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Pruebas/Disco1.mia   
+fdisk -type=P -unit=K -fit=BF -name=Particion1 -size=200 -path=/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Pruebas/Disco1.mia   
+
+fdisk -type=P -unit=K -fit=BF -name=Particion2 -size=300 -path=/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Pruebas/Disco1.mia   
+fdisk -type=P -unit=K -fit=BF -name=Particion2 -size=400 -path=/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Pruebas/Disco1.mia   
+
+fdisk -type=P -unit=K -fit=BF -name=Particion3 -size=500 -path=/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Pruebas/Disco1.mia   
+fdisk -type=P -unit=K -fit=BF -name=Particion3 -size=600 -path=/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Pruebas/Disco1.mia   
+
+fdisk -type=P -unit=K -fit=BF -name=Particion4 -size=700 -path=/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Pruebas/Disco1.mia   
+fdisk -type=P -unit=K -fit=BF -name=Particion4 -size=800 -path=/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Pruebas/Disco1.mia   
+
+fdisk -type=P -unit=K -fit=BF -name=Particion5 -size=900 -path=/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Pruebas/Disco1.mia   
+fdisk -type=P -unit=K -fit=BF -name=Particion5 -size=1000 -path=/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Pruebas/Disco1.mia   
+
+rep -name=mbr -path=/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Pruebas/Disco1.mia
+
+

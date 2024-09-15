@@ -31,7 +31,7 @@ func (fdisk *Fdisk) Print() {
 func FDisk(tokens []string) string {
 	Command := Fdisk{}
 
-	Regex := `(?i)-size=\d+|-unit=[bBkKmM]|-fit=[bBfFwW]{2}|-path="[^"]+"|-path=[^\s]+|-type=[pPeElL]|-name="[^"]+"|-name=[^\s]+`
+	Regex := `(?i)-size=\d+|-unit=[^\s]|-fit=[^\s]{2}|-path="[^"]+"|-path=[^\s]+|-type=[pPeElL]|-name="[^"]+"|-name=[^\s]+`
 
 	tokens = utils.ParseParametros(tokens, Regex)
 
@@ -75,6 +75,9 @@ func FDisk(tokens []string) string {
 		}
 
 	}
+
+	Command.Print()
+	println("")
 
 	// Manejo de erorres en los parametros
 	if Command.Fdisk_size == 0 {

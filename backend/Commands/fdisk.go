@@ -76,9 +76,6 @@ func FDisk(tokens []string) string {
 
 	}
 
-	Command.Print()
-	println("")
-
 	// Manejo de erorres en los parametros
 	if Command.Fdisk_size == 0 {
 		return "Error: Tamaño no especificado.\n"

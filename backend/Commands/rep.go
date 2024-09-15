@@ -72,7 +72,7 @@ func Rep(tokens []string) string {
 	}
 
 	// Intentar eliminar el archivo
-	//os.Remove(finalPath + ".dot")
+	os.Remove(finalPath + ".dot")
 
 	return "Comando REP ejecutado correctamente.\n"
 }

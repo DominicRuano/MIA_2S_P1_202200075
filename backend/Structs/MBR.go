@@ -197,6 +197,18 @@ func (mbr *MBR) Verifyname(name string) int {
 	return 1 // No existe
 }
 
+func (mbr *MBR) GetIndexByName(name string) int {
+	for i, partition := range mbr.Mbr_partitions {
+		// Convertimos el nombre de la partición quitando cualquier carácter nulo
+		partitionName := string(bytes.Trim(partition.Part_name[:], "\x00"))
+
+		if partitionName == name {
+			return i // Existe
+		}
+	}
+	return -1 // No existe
+}
+
 /*
 Retorna true si existe una partición extendida en el disco
 */

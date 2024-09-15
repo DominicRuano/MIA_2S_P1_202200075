@@ -16,7 +16,7 @@ func MkDisk(tokens []string) string {
 	var path, unit, fit string
 	var size, sizeBytes int
 
-	Regex := `(?i)-size=\d+|-unit=[kKmM]|-fit=[bBfFwW]{2}|-path="[^"]+"|-path=[^\s]+`
+	Regex := `(?i)-size=\d+|-unit=[^\s]|-fit=[^\s]{2}|-path="[^"]+"|-path=[^\s]+`
 
 	tokens = utils.ParseParametros(tokens, Regex)
 
@@ -38,15 +38,15 @@ func MkDisk(tokens []string) string {
 				return "Error: El tamaño debe ser mayor a cero.\n"
 			}
 		case "-unit":
-			unit = partes[1]
+			unit = strings.ToUpper(partes[1])
 
 			if strings.ToUpper(unit) != "K" && strings.ToUpper(unit) != "M" {
 				return "Error: Unidad de medida no reconocida, debe ser K o M.\n"
 			}
 		case "-fit":
-			fit = partes[1]
+			fit = strings.ToUpper(partes[1])
 
-			if strings.ToUpper(fit) != "BF" && strings.ToUpper(fit) != "FF" && strings.ToUpper(fit) != "WF" {
+			if fit != "BF" && fit != "FF" && fit != "WF" {
 				return "Error: Tipo de ajuste no reconocido, el ajuste debe ser BF, FF o WF.\n"
 			}
 		case "-path":

@@ -1,6 +1,7 @@
 package commands
 
 import (
+	global "Backend/Global"
 	structs "Backend/Structs"
 	utils "Backend/Utils"
 	"fmt"
@@ -10,14 +11,33 @@ import (
 	"time"
 )
 
-func Rep(tokens []string) string {
-	var name, path string
-	// Expresión regular para encontrar los parámetros del comando mkdisk
-	Regex := `(?i)-name=[^\s]+|-path="[^"]+"|-path=[^\s]+`
+type Rep_st struct {
+	Rep_name         string
+	Rep_path         string
+	Rep_id           string
+	Rep_path_file_ls string
+}
 
-	// Verificar si el comando tiene al menos un parametro
-	if len(tokens) < 1 {
-		return "Error: Comando rep requiere al menos X parametros (x,x,x,x).\n"
+func (rep *Rep_st) Print() {
+	fmt.Println("Rep_name:", rep.Rep_name)
+	fmt.Println("Rep_path:", rep.Rep_path)
+	fmt.Println("Rep_id:", rep.Rep_id)
+	fmt.Println("Rep_path_file_ls:", rep.Rep_path_file_ls)
+}
+
+func Rep(tokens []string) string {
+	// Variables para almacenar los parametros del comando
+	Cmd := &Rep_st{}
+
+	// Expresión regular para encontrar los parámetros del comando rep
+	Regex := `(?i)-name=[^\s]+|-name="[^"]+"|-path="[^"]+"|-path=[^\s]+|-id=[^\s]+|-id="[^"]+"|-path_file_ls="[^"]+"|-path_file_ls=[^\s]+`
+
+	// Verificar si el comando tiene los parametros necesarios
+	if len(tokens) < 3 {
+		return "Error: Comando rep requiere al menos 3 parametros (name, path, id).\n"
+	}
+	if len(tokens) > 4 {
+		return "Error: Comando rep requiere maximo 4 parametros (name, path, id, path_file_ls).\n"
 	}
 
 	// Obtener los parametros del comando
@@ -34,33 +54,65 @@ func Rep(tokens []string) string {
 
 		switch strings.ToLower(partes[0]) { // Switch para manejar los parametros
 		case "-name":
-			name = partes[1]
+			if strings.ToUpper(partes[1]) == "MBR" ||
+				strings.ToUpper(partes[1]) == "DISK" ||
+				strings.ToUpper(partes[1]) == "INODE" ||
+				strings.ToUpper(partes[1]) == "BLOCK" ||
+				strings.ToUpper(partes[1]) == "BM_INODE" ||
+				strings.ToUpper(partes[1]) == "BM_BLOCK" ||
+				strings.ToUpper(partes[1]) == "SB" ||
+				strings.ToUpper(partes[1]) == "FILE" ||
+				strings.ToUpper(partes[1]) == "LS" {
+				Cmd.Rep_name = partes[1]
+			}
 		case "-path":
-			path = strings.ReplaceAll(partes[1], "\"", "")
+			Cmd.Rep_path = strings.ReplaceAll(partes[1], "\"", "")
+		case "-id":
+			if _, exists := global.MountedPartitions[partes[1]]; exists {
+				Cmd.Rep_id = partes[1]
+			} else {
+				return fmt.Sprintf("Error: La particion %s no esta montada.\n", partes[1])
+			}
+		case "-path_file_ls":
+			Cmd.Rep_path_file_ls = strings.ReplaceAll(partes[1], "\"", "")
 		default:
 			return fmt.Sprintf("Error: Parametro [" + partes[0] + "] no reconocido.\n")
 		}
 	}
 
-	if name == "" {
+	// Verificar los parametros
+	if Cmd.Rep_name == "" {
 		return "Error: Faltan el parametro nombre.\n"
 	}
-
-	if path == "" {
+	if Cmd.Rep_path == "" {
 		return "Error: Faltan el path.\n"
 	}
+	if Cmd.Rep_id == "" {
+		return "Error: Faltan el id.\n"
+	}
 
+	// Ejecutar el comando rep
+	switch strings.ToLower(Cmd.Rep_name) {
+	case "mbr":
+		return MBRReporte(Cmd)
+	default:
+		return "Error: Nombre de reporte no reconocido.\n"
+	}
+
+}
+
+func MBRReporte(Cmd *Rep_st) string {
 	// Crea una variable para almacenar los datos leídos
 	var mbr structs.MBR
 
 	// Obtiene el mbr del archivo
-	mbr.DeserializeMBR(path)
+	mbr.DeserializeMBR(Cmd.Rep_path)
 
 	// Path final del archivo sin la extensión
-	finalPath := "../Reportes/" + name + "_reporte"
+	finalPath := "../Reportes/reporteMBR"
 
 	// Generar el archivo DOT
-	err := GenerateDotFile(mbr, finalPath+".dot", path)
+	err := GenerateDotFile(mbr, finalPath+".dot", Cmd.Rep_path)
 	if err != nil {
 		return fmt.Sprintln("Error:", err)
 	}
@@ -74,7 +126,8 @@ func Rep(tokens []string) string {
 	// Intentar eliminar el archivo
 	os.Remove(finalPath + ".dot")
 
-	return "Comando REP ejecutado correctamente.\n"
+	// Mensaje de éxito
+	return fmt.Sprintf("REP: Reporte MBR Para el Id %s generado con éxito.\n", Cmd.Rep_id)
 }
 
 // Función para generar el archivo DOT con la estructura del MBR

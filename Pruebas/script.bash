@@ -55,10 +55,10 @@ fdisk -type=e -unit=k -fit=BF -name=Part2 -size=500 -path="/home/drop/Documentos
 fdisk -type=P -unit=K -fit=BF -name=Part1 -size=10 -path="/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Pruebas/cosas mias/Disco3.mia"  
 
 #> Monta las particiones de Disco1
-mount -path=/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Pruebas/Disco1.mia -name=Particion4
+mount -path=/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Pruebas/Disco1.mia -name=Particion1
 mount -path=/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Pruebas/Disco1.mia -name=Particion2
 mount -path=/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Pruebas/Disco1.mia -name=Particion3
-mount -path=/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Pruebas/Disco1.mia -name=Particion1
+mount -path=/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Pruebas/Disco1.mia -name=Particion4
 
 #> Monta las particiones de Disco3
 mount -path="/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Pruebas/cosas mias/Disco3.mia" -name=Part4
@@ -66,6 +66,10 @@ mount -path="/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Pruebas/cosas m
 mount -path="/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Pruebas/cosas mias/Disco3.mia" -name=Part3
 mount -path="/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Pruebas/cosas mias/Disco3.mia" -name=Part1
 
-#> Genera el reporte mbr del Disco1
-rep -name=mbr1 -path=/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Pruebas/Disco1.mia
-rep -name=mbr3 -path="/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Pruebas/cosas mias/Disco3.mia"
+#> Genera el reporte mbr del Disco1 y Disco3
+rep -id=751A -name=mbr -path=/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Reportes/repMBR1.png
+rep -id=750B -name=mbr -path=/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Reportes/hola/repMBR3.png
+
+#> Genera el reporte disk del Disco1 y Disco3
+rep -id=751A -name=disk -path=/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Reportes/repDSK1.png
+rep -id=750B -name=disk -path=/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Reportes/hola/repDSK3.png

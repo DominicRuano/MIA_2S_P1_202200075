@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
+	"unsafe"
 )
 
 type Rep_st struct {
@@ -132,7 +133,7 @@ func DISKReporte(Cmd *Rep_st) string {
 	}
 
 	// Intentar eliminar el archivo
-	//os.Remove(finalPath + ".dot")
+	os.Remove(finalPath + ".dot")
 
 	// Mensaje de éxito
 	return fmt.Sprintf("REP: Reporte Disk Para el Id %s generado con éxito.\n", Cmd.Rep_id)
@@ -190,6 +191,9 @@ func GenerateDotFileDISK(mbr structs.MBR, filePath string, discPath string) erro
 
 	disconame := filepath.Base(discPath)
 
+	// Calcular el Porcentaje en BYTES que ocupa la partición en el disco
+	mbrWeight := float64(unsafe.Sizeof(mbr)) * 100 / float64(mbr.Mbr_size)
+
 	// Escribir el contenido del archivo DOT
 	_, err = file.WriteString(`
 digraph G {
@@ -200,7 +204,7 @@ digraph G {
                 <TD COLSPAN="999" BORDER="0"><B>` + disconame + `</B></TD>
             </TR>
             <TR>
-				<TD ROWSPAN="2">MBR</TD>`)
+				<TD ROWSPAN="2">MBR<BR/><FONT POINT-SIZE="7" COLOR="blue">` + fmt.Sprintf("%.2f", mbrWeight) + `%` + ` del disco</FONT></TD>`)
 
 	if err != nil {
 		return fmt.Errorf("error el escribir el tamaño del MBR en el archivo DOT: %v", err)
@@ -235,7 +239,6 @@ digraph G {
 
 			// Guarda el indice de la partición extendida
 			ExtendidaIndex = i
-			println("ExtendidaIndex: ", ExtendidaIndex)
 
 			// Calcula el ROWSPAN de la particion extendida
 			ROWSPAN := 2
@@ -298,9 +301,12 @@ digraph G {
 		// Calcular el Porcentaje en BYTES que ocupa la partición en el disco
 		logicaweight := float64(ebr.Ebr_size) * 100 / float64(mbr.Mbr_size)
 
+		// Calcular el Porcentaje en BYTES que ocupa el ebr en la partición extendida
+		ebrWeight := float64(unsafe.Sizeof(ebr)) * 100 / float64(mbr.Mbr_partitions[ExtendidaIndex].Part_size)
+
 		// Escribir la partición en el archivo DOT
 		_, err := file.WriteString(`
-                <TD>EBR</TD>
+                <TD>EBR<BR/><FONT POINT-SIZE="5" COLOR="blue">` + fmt.Sprintf("%.2f", ebrWeight) + `%` + ` del disco</FONT></TD>
                 <TD>Lógica<BR/><FONT POINT-SIZE="10" COLOR="red">` + fmt.Sprintf("%.2f", logicaweight) + `%` + ` del disco</FONT></TD>`)
 		if err != nil {
 			return fmt.Errorf("error al escribir el tamaño de la particion en el archivo DOT: %v", err)
@@ -313,12 +319,19 @@ digraph G {
 	}
 
 	if !validarEBR {
+		// Calcular el Porcentaje en BYTES que ocupa el ebr en la partición extendida
+		ebrWeight := float64(unsafe.Sizeof(ebr)) * 100 / float64(mbr.Mbr_partitions[ExtendidaIndex].Part_size)
+
 		// Escribir la partición en el archivo DOT
 		_, err := file.WriteString(`
-                <TD>EBR</TD>`)
+                <TD>EBR<BR/><FONT POINT-SIZE="5" COLOR="blue">` + fmt.Sprintf("%.2f", ebrWeight) + `%` + ` del disco</FONT></TD>`)
 		if err != nil {
 			return fmt.Errorf("error al escribir el tamaño de la particion en el archivo DOT: %v", err)
 		}
+	}
+
+	if lastnext == -1 {
+		lastnext = mbr.Mbr_partitions[ExtendidaIndex].Part_start
 	}
 
 	// Calcular el espacio libre en la ultima partición logica
@@ -468,10 +481,13 @@ digraph G {
 	return nil
 }
 
-// Función para ejecutar el comando dot para generar la imagen
+// Función para ejecutar el comando dot para generar una imagen en el formato especificado
 func ExecuteDot(dotFile, outputImage string) error {
-	// Ejecutar el comando `dot` para convertir .dot en .png
-	cmd := exec.Command("dot", "-Tpng", dotFile, "-o", outputImage)
+	// Obtener la extensión del archivo de salida (sin el punto inicial)
+	ext := filepath.Ext(outputImage)[1:]
+
+	// Ejecutar el comando `dot` con el formato dinámico (basado en la extensión del archivo de salida)
+	cmd := exec.Command("dot", "-T"+ext, dotFile, "-o", outputImage)
 	err := cmd.Run()
 	if err != nil {
 		return fmt.Errorf("error al ejecutar el comando dot: %v", err)

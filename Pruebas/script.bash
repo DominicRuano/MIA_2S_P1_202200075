@@ -45,13 +45,13 @@ fdisk -type=l -unit=k -fit=BF -name=Particion7 -size=100 -path=/home/drop/Docume
 fdisk -type=l -unit=k -fit=BF -name=Particion8 -size=100 -path=/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Pruebas/Disco1.mia   
 
 #> Crea todas las particiones del disco3
+fdisk -type=e -unit=k -fit=BF -name=Part2 -size=500 -path="/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Pruebas/cosas mias/Disco3.mia"  
 fdisk -type=l -unit=k -fit=BF -name=Part8 -size=100 -path="/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Pruebas/cosas mias/Disco3.mia"  
 fdisk -type=l -unit=k -fit=BF -name=Part6 -size=100 -path="/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Pruebas/cosas mias/Disco3.mia"  
 fdisk -type=P -unit=K -fit=BF -name=Part3 -size=400 -path="/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Pruebas/cosas mias/Disco3.mia"  
 fdisk -type=P -unit=K -fit=BF -name=Part4 -size=50 -path="/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Pruebas/cosas mias/Disco3.mia"  
 fdisk -type=l -unit=k -fit=BF -name=Part7 -size=100 -path="/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Pruebas/cosas mias/Disco3.mia"  
 fdisk -type=l -unit=k -fit=BF -name=Part5 -size=100 -path="/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Pruebas/cosas mias/Disco3.mia"  
-fdisk -type=e -unit=k -fit=BF -name=Part2 -size=500 -path="/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Pruebas/cosas mias/Disco3.mia"  
 fdisk -type=P -unit=K -fit=BF -name=Part1 -size=10 -path="/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Pruebas/cosas mias/Disco3.mia"  
 
 #> Monta las particiones de Disco1
@@ -66,10 +66,10 @@ mount -path="/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Pruebas/cosas m
 mount -path="/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Pruebas/cosas mias/Disco3.mia" -name=Part3
 mount -path="/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Pruebas/cosas mias/Disco3.mia" -name=Part1
 
-#> Genera el reporte mbr del Disco1 y Disco3
-rep -id=751A -name=mbr -path=/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Reportes/repMBR1.png
-rep -id=750B -name=mbr -path=/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Reportes/hola/repMBR3.png
+#> Genera el reporte mbr del Disco1
+rep -id=751A -name=mbr -path=/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Reportes/repMBR1.svg
+rep -id=750B -name=mbr -path=/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Reportes/repMBR3.svg
 
 #> Genera el reporte disk del Disco1 y Disco3
-rep -id=751A -name=disk -path=/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Reportes/repDSK1.png
-rep -id=750B -name=disk -path=/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Reportes/hola/repDSK3.png
+rep -id=751A -name=disk -path=/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Reportes/repDSK1.svg
+rep -id=750B -name=disk -path=/home/drop/Documentos/U/Lab_MIA/MIA_2S_P1_202200075/Reportes/repDSK3.svg

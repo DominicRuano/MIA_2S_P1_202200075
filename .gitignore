@@ -29,3 +29,7 @@ tmp/*
 *.mia
 *.dot
 *.png
+*.svg
+/.vscode
+/tmp
+*.log

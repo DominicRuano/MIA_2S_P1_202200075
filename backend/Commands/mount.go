@@ -78,7 +78,7 @@ func Mount(tokens []string) string {
 	}
 
 	// Verificar si la particion ya esta montada
-	if mbr.Mbr_partitions[index].Part_status == [1]byte{'1'} {
+	if mbr.Mbr_partitions[index].Part_status[0] == 1 {
 		return fmt.Sprintf("Error: La partición %s ya está montada\n", Cmd.Fdisk_name)
 	}
 

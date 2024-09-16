@@ -38,6 +38,8 @@ func Analyzer(text string) string {
 			processed += Commands.FDisk(tokens[1:])
 		case "mount": // Comando MOUNT
 			processed += Commands.Mount(tokens[1:])
+		case "break": // Comando break
+			return processed
 		default: // Comando no reconocido
 			processed += "Comando [" + tokens[0] + "] no reconocido\n"
 		}

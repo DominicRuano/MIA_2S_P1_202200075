@@ -271,11 +271,13 @@ digraph G {
 	ultimaParticion := mbr.Mbr_size - (mbr.Mbr_partitions[LastIndex].Part_start + mbr.Mbr_partitions[LastIndex].Part_size)
 	partWeight := float64(ultimaParticion) * 100 / float64(mbr.Mbr_size)
 
-	// Escribir la partición en el archivo DOT
-	_, err = file.WriteString(`
+	if partWeight > 0.01 {
+		// Escribir la partición en el archivo DOT
+		_, err = file.WriteString(`
 				<TD ROWSPAN="2">Libre<BR/><FONT POINT-SIZE="10" COLOR="red">` + fmt.Sprintf("%.2f", partWeight) + `%` + ` del disco</FONT></TD>`)
-	if err != nil {
-		return fmt.Errorf("error al escribir el tamaño de la particion en el archivo DOT: %v", err)
+		if err != nil {
+			return fmt.Errorf("error al escribir el tamaño de la particion en el archivo DOT: %v", err)
+		}
 	}
 
 	// Escribir en el archivo DOT
@@ -337,10 +339,12 @@ digraph G {
 	// Calcular el espacio libre en la ultima partición logica
 	ultimaParticionLogica := float64((mbr.Mbr_partitions[ExtendidaIndex].Part_size + mbr.Mbr_partitions[ExtendidaIndex].Part_start - lastnext)) * 100 / float64(mbr.Mbr_size)
 
-	_, err = file.WriteString(`
+	if ultimaParticionLogica > 0.01 {
+		_, err = file.WriteString(`
 		<TD>Libre<BR/><FONT POINT-SIZE="10" COLOR="red">` + fmt.Sprintf("%.2f", ultimaParticionLogica) + `%` + ` del disco</FONT></TD>`)
-	if err != nil {
-		return fmt.Errorf("error al escribir el tamaño de la particion en el archivo DOT: %v", err)
+		if err != nil {
+			return fmt.Errorf("error al escribir el tamaño de la particion en el archivo DOT: %v", err)
+		}
 	}
 	// Cerrar la tabla
 	_, err = file.WriteString(`

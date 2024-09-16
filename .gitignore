@@ -27,6 +27,7 @@ go.work.sum
 # Dominic
 tmp/*
 Reportes/*
+*.mia
 /.vscode
 /tmp
 *.log

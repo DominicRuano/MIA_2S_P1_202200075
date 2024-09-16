@@ -66,7 +66,7 @@ func (mbr *MBR) Print() {
 func (mbr *MBR) PrintPartitions() {
 	for i, partition := range mbr.Mbr_partitions {
 		// Convertir Part_status, Part_type y Part_fit a char
-		partStatus := rune(partition.Part_status[0])
+		partStatus := fmt.Sprint(partition.Part_status[0])
 		partType := rune(partition.Part_type[0])
 		partFit := rune(partition.Part_fit[0])
 
@@ -74,7 +74,7 @@ func (mbr *MBR) PrintPartitions() {
 		partName := string(partition.Part_name[:])
 
 		fmt.Printf("Partition %d:\n", i+1)
-		fmt.Printf("  Status: %c\n", partStatus)
+		fmt.Printf("  Status: %s\n", partStatus)
 		fmt.Printf("  Type: %c\n", partType)
 		fmt.Printf("  Fit: %c\n", partFit)
 		fmt.Printf("  Start: %d\n", partition.Part_start)

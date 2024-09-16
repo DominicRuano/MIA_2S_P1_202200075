@@ -7,20 +7,23 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 	"time"
 )
 
 type Rep_st struct {
 	Rep_name         string
-	Rep_path         string
+	Rep_pathDisk     string
+	Rep_pathDestino  string
 	Rep_id           string
 	Rep_path_file_ls string
 }
 
 func (rep *Rep_st) Print() {
 	fmt.Println("Rep_name:", rep.Rep_name)
-	fmt.Println("Rep_path:", rep.Rep_path)
+	fmt.Println("Rep_pathDisk:", rep.Rep_pathDisk)
+	fmt.Println("Rep_pathDestino:", rep.Rep_pathDestino)
 	fmt.Println("Rep_id:", rep.Rep_id)
 	fmt.Println("Rep_path_file_ls:", rep.Rep_path_file_ls)
 }
@@ -66,10 +69,11 @@ func Rep(tokens []string) string {
 				Cmd.Rep_name = partes[1]
 			}
 		case "-path":
-			Cmd.Rep_path = strings.ReplaceAll(partes[1], "\"", "")
+			Cmd.Rep_pathDestino = strings.ReplaceAll(partes[1], "\"", "")
 		case "-id":
-			if _, exists := global.MountedPartitions[partes[1]]; exists {
+			if PathOrigen, exists := global.MountedPartitions[partes[1]]; exists {
 				Cmd.Rep_id = partes[1]
+				Cmd.Rep_pathDisk = PathOrigen
 			} else {
 				return fmt.Sprintf("Error: La particion %s no esta montada.\n", partes[1])
 			}
@@ -84,7 +88,7 @@ func Rep(tokens []string) string {
 	if Cmd.Rep_name == "" {
 		return "Error: Faltan el parametro nombre.\n"
 	}
-	if Cmd.Rep_path == "" {
+	if Cmd.Rep_pathDestino == "" {
 		return "Error: Faltan el path.\n"
 	}
 	if Cmd.Rep_id == "" {
@@ -106,19 +110,31 @@ func MBRReporte(Cmd *Rep_st) string {
 	var mbr structs.MBR
 
 	// Obtiene el mbr del archivo
-	mbr.DeserializeMBR(Cmd.Rep_path)
+	mbr.DeserializeMBR(Cmd.Rep_pathDisk)
+
+	// Obtener la extensión del archivo
+	ext := filepath.Ext(Cmd.Rep_pathDestino)
 
 	// Path final del archivo sin la extensión
-	finalPath := "../Reportes/reporteMBR"
+	finalPath := strings.TrimSuffix(Cmd.Rep_pathDestino, ext)
+
+	// Obtener el directorio del path (sin el archivo)
+	dir := filepath.Dir(Cmd.Rep_pathDestino)
+
+	// Crear todas las carpetas necesarias si no existen
+	err := os.MkdirAll(dir, os.ModePerm)
+	if err != nil {
+		return fmt.Sprintf("Error al crear directorios: %v\n", err)
+	}
 
 	// Generar el archivo DOT
-	err := GenerateDotFile(mbr, finalPath+".dot", Cmd.Rep_path)
+	err = GenerateDotFile(mbr, finalPath+".dot", Cmd.Rep_pathDisk)
 	if err != nil {
 		return fmt.Sprintln("Error:", err)
 	}
 
 	// Ejecutar el comando DOT
-	err = ExecuteDot(finalPath+".dot", finalPath+".png")
+	err = ExecuteDot(finalPath+".dot", Cmd.Rep_pathDestino)
 	if err != nil {
 		return fmt.Sprintln("Error:", err)
 	}

@@ -1,6 +1,9 @@
 package utils
 
 import (
+	structs "Backend/Structs"
+	"encoding/binary"
+	"math"
 	"regexp"
 	"strings"
 )
@@ -28,4 +31,18 @@ func ParseParametros(tokens []string, RE string) []string {
 	tokens = re.FindAllString(args, -1)
 
 	return tokens
+}
+
+func CalculateN(partition *structs.Partition) int32 {
+	/*
+		numerador = (partition_montada.size - sizeof(Structs::Superblock)
+		denrominador base = (4 + sizeof(Structs::Inodes) + 3 * sizeof(Structs::Fileblock))
+		n = floor(numerador / denrominador)
+	*/
+
+	numerator := int(partition.Part_size) - binary.Size(structs.SuperBloque{})
+	denominator := 4 + binary.Size(structs.Inodo{}) + 3*binary.Size(structs.FileBlock{}) // No importa que bloque poner, ya que todos tienen el mismo tamaño
+	n := math.Floor(float64(numerator) / float64(denominator))
+
+	return int32(n)
 }

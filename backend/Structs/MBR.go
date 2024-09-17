@@ -240,3 +240,12 @@ func (mbr *MBR) GetextendedPartitionIndex() int {
 	}
 	return -1
 }
+
+func (mbr *MBR) GetPartitionById(id string) *Partition {
+	for i, partition := range mbr.Mbr_partitions {
+		if string(partition.Part_id[:]) == id {
+			return &mbr.Mbr_partitions[i]
+		}
+	}
+	return nil
+}

@@ -27,7 +27,7 @@ func Analyzer(text string) string {
 		}
 
 		// Verificar si la linea es un comando
-		switch tokens[0] {
+		switch strings.ToLower(tokens[0]) {
 		case "mkdisk": // Comando MKDISK
 			processed += Commands.MkDisk(tokens[1:])
 		case "rmdisk": // Comando RMDISK
@@ -42,6 +42,8 @@ func Analyzer(text string) string {
 			processed += Commands.Mkfs(tokens[1:])
 		case "break": // Comando break
 			return processed
+		case "logout": // Comando pause
+			processed += Commands.Logout()
 		default: // Comando no reconocido
 			processed += "Comando [" + tokens[0] + "] no reconocido\n"
 		}

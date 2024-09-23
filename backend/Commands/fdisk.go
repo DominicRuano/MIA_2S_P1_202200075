@@ -103,7 +103,10 @@ func FDisk(tokens []string) string {
 
 	// Se crea una estructura MBR para manejar las particiones
 	var mbr = &structs.MBR{}
-	mbr.DeserializeMBR(Command.Fdisk_path) // Se carga el MBR del disco
+	err := mbr.DeserializeMBR(Command.Fdisk_path) // Se carga el MBR del disco
+	if err != nil {
+		return fmt.Sprintf("Error: %s\n", err)
+	}
 
 	//Dependiendo de que tipo de particion sea, se ejecuta una funcion diferente
 	if strings.ToUpper(Command.Fdisk_type) == "P" {

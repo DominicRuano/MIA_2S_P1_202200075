@@ -103,12 +103,9 @@ func FullFformat(Cmd *mkfs) string {
 
 	// Calcula el n
 	n := utils.CalculateN(Particion)
-	fmt.Printf("N vale: %d \n", n)
 
 	// Crea el superbloque
 	SuperBloque := createSuperBlock(Particion, n)
-
-	SuperBloque.Print()
 
 	// Crear los bitmaps
 	err = SuperBloque.CreateBitMaps(Cmd.Path)

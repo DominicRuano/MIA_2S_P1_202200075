@@ -133,14 +133,6 @@ func (sb *SuperBloque) CreateUsersFile(path string) error {
 	sb.SB_free_blocks_count--
 	sb.SB_first_blo += int32(sb.SB_block_size)
 
-	// Verificar el inodo raíz
-	fmt.Println("\nInodo Raíz:")
-	rootInode.Print()
-
-	// Verificar el bloque de carpeta raíz
-	fmt.Println("\nBloque de Carpeta Raíz:")
-	rootBlock.Print()
-
 	// ----------- Creamos /users.txt -----------
 	usersText := "1,G,root\n1,U,root,123\n"
 
@@ -227,22 +219,6 @@ func (sb *SuperBloque) CreateUsersFile(path string) error {
 	sb.SB_blocks_count++
 	sb.SB_free_blocks_count--
 	sb.SB_first_blo += int32(sb.SB_block_size)
-
-	// Verificar el inodo raíz
-	fmt.Println("\nInodo Raíz Actualizado:")
-	rootInode.Print()
-
-	// Verificar el bloque de carpeta raíz
-	fmt.Println("\nBloque de Carpeta Raíz Actualizado:")
-	rootBlock.Print()
-
-	// Verificar el inodo users.txt
-	fmt.Println("\nInodo users.txt:")
-	usersInode.Print()
-
-	// Verificar el bloque de users.txt
-	fmt.Println("\nBloque de users.txt:")
-	usersBlock.Print()
 
 	return nil
 }

@@ -65,7 +65,7 @@ func (sb *SuperBloque) UpdateBitmapInode(path string) error {
 	defer file.Close()
 
 	// Mover el puntero del archivo a la posición del bitmap de inodos
-	_, err = file.Seek(int64(sb.SB_block_start)+int64(sb.SB_blocks_count), 0)
+	_, err = file.Seek(int64(sb.SB_bm_inode_start)+int64(sb.SB_inodes_count), 0)
 	if err != nil {
 		return err
 	}
@@ -89,7 +89,7 @@ func (sb *SuperBloque) UpdateBitmapBlock(path string) error {
 	defer file.Close()
 
 	// Mover el puntero del archivo a la posición del bitmap de bloques
-	_, err = file.Seek(int64(sb.SB_block_start)+int64(sb.SB_blocks_count), 0)
+	_, err = file.Seek(int64(sb.SB_bm_block_start)+int64(sb.SB_blocks_count), 0)
 	if err != nil {
 		return err
 	}

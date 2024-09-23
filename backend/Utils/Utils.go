@@ -3,7 +3,9 @@ package utils
 import (
 	structs "Backend/Structs"
 	"encoding/binary"
+	"io"
 	"math"
+	"os"
 	"regexp"
 	"strings"
 )
@@ -45,4 +47,25 @@ func CalculateN(partition *structs.Partition) int32 {
 	n := math.Floor(float64(numerator) / float64(denominator))
 
 	return int32(n)
+}
+
+func ReadBytes(path string, offset int64, size int32) ([]byte, error) {
+	// Abrir el archivo
+	file, err := os.OpenFile(path, os.O_RDONLY, 0644)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	// Crear un slice del tamaño especificado por `size`
+	buffer := make([]byte, size)
+
+	// Leer los bytes desde el archivo a partir del offset
+	_, err = file.ReadAt(buffer, offset)
+	if err != nil && err != io.EOF {
+		// Devolvemos un error sólo si no es el final del archivo (EOF)
+		return nil, err
+	}
+
+	return buffer, nil
 }

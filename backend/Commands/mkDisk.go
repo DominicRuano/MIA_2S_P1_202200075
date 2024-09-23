@@ -16,7 +16,7 @@ func MkDisk(tokens []string) string {
 	var path, unit, fit string
 	var size, sizeBytes int
 
-	Regex := `(?i)-size=\d+|-unit=[^\s]|-fit=[^\s]{2}|-path="[^"]+"|-path=[^\s]+`
+	Regex := `(?i)-size=\d+|-unit=[^\s]|-fit=[^\s]{2}|-path="[^"]+"|-path=[^\s]+|-param=[^\s]+`
 
 	tokens = utils.ParseParametros(tokens, Regex)
 

@@ -4,6 +4,11 @@ import (
 	"errors"
 )
 
+// variables para el logueo y deslogueo
+var Islogged bool = false
+var User string = ""
+var Permiso string = ""
+
 var (
 	MountedPartitions map[string]string = make(map[string]string)
 )
@@ -45,7 +50,7 @@ var PathToNumber = make(map[string]int)
 func GetNumPartition(path string) int {
 	// Asignar una letra al path si no tiene una asignada
 	if _, exists := PathToNumber[path]; !exists {
-		PathToNumber[path] = 0
+		PathToNumber[path] = 1
 	} else {
 		PathToNumber[path] += 1
 	}

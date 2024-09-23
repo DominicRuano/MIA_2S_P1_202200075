@@ -1,57 +1,211 @@
-# MIA_2S_P1_Carnet
+# Proyecto 1 - Sistema de Archivos EXT2
 
-Este repositorio contiene el Proyecto 1 de la clase Manejo e Implementación de Archivos del segundo semestre de 2024. El objetivo de este proyecto es desarrollar una aplicación web para la gestión de un sistema de archivos EXT2, permitiendo su administración desde cualquier sistema operativo a través de una interfaz web. La aplicación incluye tanto el desarrollo de un frontend interactivo como un backend robusto implementado en Go.
+Este proyecto consiste en desarrollar una aplicación web que simule la gestión de un sistema de archivos EXT2. Incluye tanto un frontend como un backend desarrollado en Go y React, diseñado para crear particiones, montar discos, generar reportes y administrar usuarios.
 
-## Descripción
+## Requisitos de instalación
 
-La aplicación desarrollada en este proyecto permite:
+### Instalación de Go en Fedora
 
-- Administrar archivos y escribir estructuras en el sistema de archivos EXT2.
-- Realizar formateo rápido y completo de particiones.
-- Crear y gestionar particiones y usuarios en el sistema de archivos.
-- Generar reportes visuales utilizando Graphviz.
+1. **Actualizar paquetes**:
+   ```bash
+   sudo dnf update
+   ```
 
-## Arquitectura
+2. **Instalar Go**:
+   ```bash
+   sudo dnf install golang
+   ```
 
-- **Frontend**: Desarrollado utilizando Angular (o cualquier otro framework moderno). Se encarga de la interfaz de usuario y la interacción con el backend mediante APIs RESTful.
-- **Backend**: Implementado en Go, maneja las operaciones sobre el sistema de archivos y expone APIs para su interacción con el frontend.
+3. **Verificar instalación**:
+   ```bash
+   go version
+   ```
 
-## Características
+### Instalación de Node.js y React en Fedora
 
-- **Gestión de discos y particiones**: Comandos como `MKDISK`, `RMDISK`, `FDISK`, y `MOUNT` para la creación y manipulación de discos y particiones virtuales.
-- **Administración de usuarios**: Comandos como `MKUSR`, `RMUSR`, `LOGIN`, y `LOGOUT` para la gestión de usuarios y sus permisos en el sistema.
-- **Operaciones sobre archivos**: Comandos como `MKFILE`, `MKDIR`, `CAT` para la creación y manipulación de archivos y directorios.
-- **Reportes**: Generación de reportes detallados del sistema de archivos, como el MBR, inodos, bloques, y más, utilizando Graphviz.
+1. **Actualizar paquetes**:
+   ```bash
+   sudo dnf update
+   ```
 
-## Requisitos
+2. **Instalar Node.js** (incluye npm):
+   ```bash
+   sudo dnf install nodejs
+   ```
 
-- **Frontend**: Angular (o cualquier otro framework moderno para el frontend).
-- **Backend**: Go (Golang).
-- **Sistema Operativo**: Distribución GNU/Linux para la ejecución del proyecto.
+3. **Verificar instalación**:
+   ```bash
+   node -v
+   npm -v
+   ```
 
-## Instrucciones de Uso
+## Ejecución del proyecto
+
+### Backend (Go)
 
 1. **Clonar el repositorio**:
-    ```bash
-    git clone https://github.com/usuario/MIA_2S_P1_Carnet.git
-    ```
+   ```bash
+   git clone https://github.com/DominicRuano/MIA_2S_P1_202200075
+   ```
 
-2. **Configuración del entorno**:
-   - Instalar las dependencias necesarias para el frontend (Angular, etc.).
-   - Instalar Go y las dependencias del backend.
+2. **Ejecutar**:
+   ```bash
+   cd backend
+   go run main.go
+   ```
 
-3. **Ejecución del proyecto**:
-   - Iniciar el backend con Go.
-   - Iniciar el frontend y acceder a la interfaz web para interactuar con el sistema de archivos.
+### Frontend (React)
 
-4. **Comandos disponibles**:
-   - **MKDISK**: Crear un disco virtual.
-   - **RMDISK**: Eliminar un disco virtual.
-   - **FDISK**: Administrar particiones dentro del disco virtual.
-   - **MOUNT**: Montar particiones.
-   - **MKUSR**: Crear un nuevo usuario en el sistema.
-   - **MKFILE**: Crear un archivo en el sistema.
-   - **REP**: Generar reportes del sistema de archivos.
+1. **Instalar dependencias**:
+   ```bash
+   cd my-react-frontend
+   npm install
+   ```
+
+2. **Ejecutar**:
+   ```bash
+   npm start
+   ```
+
+La aplicación estará disponible en `http://localhost:3000/`.
+
+## Comandos del sistema de archivos
+
+### Creación de discos (`mkdisk`)
+
+- `-size`: Tamaño del disco a crear en KB o MB (obligatorio).
+- `-fit`: Método de ajuste de las particiones (`BF`, `FF`, `WF`); opcional, por defecto `FF`.
+- `-unit`: Unidad de medida para el tamaño (`K` para KB, `M` para MB); opcional, por defecto `M`.
+- `-path`: Ruta donde se creará el archivo que simula el disco (obligatorio).
+
+```bash
+mkdisk -size=3000 -unit=K -path="/home/user/disco1.smia"
+```
+
+### Eliminación de discos (`rmdisk`)
+
+- `-path`: Ruta del archivo que simula el disco a eliminar (obligatorio).
+
+```bash
+rmdisk -path="/home/user/disco1.smia"
+```
+
+### Creación, eliminación y modificación de particiones (`fdisk`)
+
+- `-size`: Tamaño de la partición en KB o MB (obligatorio al crear).
+- `-unit`: Unidad de medida para el tamaño (`B`, `K`, `M`); opcional, por defecto `K`.
+- `-path`: Ruta del archivo que simula el disco donde se creará la partición (obligatorio).
+- `-type`: Tipo de partición (`P` primaria, `E` extendida, `L` lógica); opcional, por defecto `P`.
+- `-fit`: Método de ajuste de la partición (`BF`, `FF`, `WF`); opcional, por defecto `WF`.
+- `-name`: Nombre de la partición (obligatorio).
+
+```bash
+fdisk -size=500 -path="/home/user/disco1.smia" -name=Part1
+```
+
+### Montar particiones (`mount`)
+
+- `-path`: Ruta del archivo que simula el disco que contiene la partición (obligatorio).
+- `-name`: Nombre de la partición a montar (obligatorio).
+
+```bash
+mount -path="/home/user/disco1.smia" -name=Part1
+```
+
+### Formateo de particiones (`mkfs`)
+
+- `-id`: ID generado al montar la partición (obligatorio).
+- `-type`: Tipo de formateo (`full` para formateo completo); opcional, por defecto `full`.
+
+```bash
+mkfs -id=341A -type=full
+```
+
+### Login (`login`)
+
+- `-user`: Nombre del usuario (obligatorio).
+- `-pass`: Contraseña del usuario (obligatorio).
+- `-id`: ID de la partición montada (obligatorio).
+
+```bash
+login -user=root -pass=123 -id=341A
+```
+
+### Logout (`logout`)
+
+Este comando no tiene parámetros.
+
+```bash
+logout
+```
+
+### Creación de grupos (`mkgrp`)
+
+- `-name`: Nombre del grupo a crear (obligatorio).
+
+```bash
+mkgrp -name=usuarios
+```
+
+### Creación de usuarios (`mkusr`)
+
+- `-user`: Nombre del usuario a crear (obligatorio).
+- `-pass`: Contraseña del usuario (obligatorio).
+- `-grp`: Nombre del grupo al que pertenecerá el usuario (obligatorio).
+
+```bash
+mkusr -user=user1 -pass=pass123 -grp=usuarios
+```
+
+### Generación de reportes (`rep`)
+
+- `-name`: Nombre del reporte a generar (`mbr`, `disk`, `inode`, `block`, `bm_inode`, `bm_block`, `sb`, `file`, `ls`).
+- `-path`: Ruta donde se guardará el reporte (obligatorio).
+- `-id`: ID de la partición (obligatorio).
+- `-path_file_ls`: Nombre del archivo o carpeta del que se mostrará el reporte (opcional).
+
+```bash
+rep -id=341A -path="/home/user/reports/reporte_mbr.jpg" -name=mbr
+```
+
+## Estructura del proyecto
+
+```
+MIA_2S_P1_tu_carnet/
+│
+├── backend/
+│   ├── Analyzer/
+│   │   └── ...
+│   ├── Commands/
+│   │   └── ...
+│   ├── Global/
+│   │   └── ...
+│   ├── Structs/
+│   │   └── ...
+│   ├── tmp/
+│   │   └── ...
+│   ├── ...
+│   └── main.go
+│
+├── my-react-frontend/
+│   ├── ...
+│   └── src/
+│       ├── app.js/
+│       ├── app.css/
+│       └── ...
+├── Pruebas/
+└── Reportes/
+```
+
+## Consideraciones adicionales
+
+- **Graphviz**: Es necesario para la generación de reportes. Asegúrate de tenerlo instalado.
+- **Extensión .smia**: Los archivos que simulan discos usan esta extensión.
+- **Sistema EXT2**: Todas las operaciones y reportes se basan en este sistema simulado.
+
+## Créditos
+
+Proyecto desarrollado para el curso de Manejo e Implementación de Archivos, impartido en la Universidad de San Carlos de Guatemala.
 
 ## Licencia
 
